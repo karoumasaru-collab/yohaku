@@ -17,16 +17,21 @@ export default function SignUpPage() {
     setLoading(true)
     setError('')
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signUp({ email, password })
 
-    if (error) {
-      setError(error.message)
+      if (error) {
+        setError(error.message)
+        return
+      }
+
+      router.push('/onboarding')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '予期しないエラーが発生しました')
+    } finally {
       setLoading(false)
-      return
     }
-
-    router.push('/onboarding')
   }
 
   return (

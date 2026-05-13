@@ -17,16 +17,21 @@ export default function SignInPage() {
     setLoading(true)
     setError('')
 
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
 
-    if (error) {
-      setError('メールアドレスまたはパスワードが違います')
+      if (error) {
+        setError('メールアドレスまたはパスワードが違います')
+        return
+      }
+
+      router.push('/home')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '予期しないエラーが発生しました')
+    } finally {
       setLoading(false)
-      return
     }
-
-    router.push('/home')
   }
 
   return (
